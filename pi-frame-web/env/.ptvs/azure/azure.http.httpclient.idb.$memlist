@@ -1,0 +1,16 @@
+sys
+HTTPError
+DEBUG_REQUESTS
+HTTPSConnection
+DEFAULT_HTTP_TIMEOUT
+urlparse
+os
+base64
+HTTPResponse
+HTTP_PORT
+_update_request_uri_query
+DEBUG_RESPONSES
+HTTPConnection
+_HTTPClient
+_USER_AGENT_STRING
+HTTPS_PORT

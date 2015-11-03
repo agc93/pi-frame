@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="panel panel-primary">
+    <div class="panel panel-heading">
+        <h3 class="panel-title">Input new path</h3>
+    </div>
+    <div class="panel-body">
+        <p>
+            <form class="form-horizontal" action="/start" method="get">
+                <fieldset>
+                    <div class="input-group">
+                        <label for="path" class="col-lg-2 control-label">Path</label>
+                        <div class="col-lg-10">
+                            <input class="form-control" type="text" name="folderPath" id="folderPath" placeholder="Valid folder path" required />
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <button type="submit" class="btn btn-primary">Launch</button>
+                    </div>
+                </fieldset>
+            </form>
+        </p>
+    </div>
+</div>
+{% endblock %}

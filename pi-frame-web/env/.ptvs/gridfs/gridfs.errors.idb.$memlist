@@ -1,0 +1,6 @@
+FileExists
+UnsupportedAPI
+NoFile
+PyMongoError
+CorruptGridFile
+GridFSError

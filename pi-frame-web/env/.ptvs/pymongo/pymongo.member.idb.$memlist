@@ -1,0 +1,8 @@
+ReadPreference
+ARBITER
+OTHER
+Member
+common
+SECONDARY
+ConfigurationError
+PRIMARY

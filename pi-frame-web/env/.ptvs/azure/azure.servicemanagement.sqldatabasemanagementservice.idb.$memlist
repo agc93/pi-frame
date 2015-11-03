@@ -1,0 +1,13 @@
+_SqlManagementXmlSerializer
+Database
+_validate_not_none
+_ServiceManagementClient
+DEFAULT_HTTP_TIMEOUT
+EventLog
+Servers
+FirewallRule
+ServerQuota
+SqlDatabaseManagementService
+_MinidomXmlToObject
+MANAGEMENT_HOST
+ServiceObjective

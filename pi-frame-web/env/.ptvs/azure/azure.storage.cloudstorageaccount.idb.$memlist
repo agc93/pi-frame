@@ -1,0 +1,4 @@
+QueueService
+TableService
+BlobService
+CloudStorageAccount

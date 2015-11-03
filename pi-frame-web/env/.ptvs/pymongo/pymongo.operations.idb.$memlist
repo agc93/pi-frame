@@ -1,0 +1,9 @@
+validate_boolean
+UpdateOne
+ReplaceOne
+DeleteOne
+_WriteOp
+DeleteMany
+validate_is_dict
+InsertOne
+UpdateMany
