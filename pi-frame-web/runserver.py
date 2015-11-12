@@ -7,7 +7,7 @@ from pi_frame_web import app
 from flask_debugtoolbar import DebugToolbarExtension
 import sys
 
-import ptvsd
+#import ptvsd
 #ptvsd.enable_attach(secret='ptvsd', address = ('localhost', 12345))
 #ptvsd.wait_for_attach(timeout = 10)
 

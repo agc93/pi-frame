@@ -103,6 +103,7 @@ def startPost():
 	
 def startProcess(launchPath):
 	full_args = buildArgs(launchPath)
+	print full_args
 	#raise
 	p = subprocess.Popen(full_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	time.sleep(1)
@@ -131,7 +132,7 @@ def buildArgs(launchPath):
 	launch_args.append(run_command)
 	launch_args.append('-t')
 	params["time"]
-	launch_args.append('a')
+	launch_args.append('-a')
 	launch_args.append('-u')
 	launch_args.append(launchPath)
 	return launch_args
