@@ -13,6 +13,9 @@ from os.path import isfile, join
 import subprocess
 import time
 from file_read import *
+from process_details import *
+import os
+import signal
 
 reader = JsonReader("locations.json")
 settings = JsonReader("settings.json")
@@ -104,6 +107,7 @@ def startPost():
 def startProcess(launchPath):
 	#full_args = buildArgs()
 	#raise
+	killExisting()
 	files = getFiles(launchPath)
 	full_args = buildArgs() + files
 	#raise
@@ -142,3 +146,15 @@ def buildArgs():
 def getFiles(folderPath):
 	files = [ join(folderPath, f) for f in listdir(folderPath) if isfile(join(folderPath, f)) ]
 	return files
+	
+def killExisting():
+	p = ProcessDetails(run_command)
+	pids = p.GetPIDs()
+	if pids == None:
+		return
+	else:
+		for pid in pids:
+			try:
+				os.kill(int(pid), signal.SIGTERM)
+			except ValueError:
+				break
