@@ -14,8 +14,10 @@ import time
 from file_read import *
 
 reader = JsonReader("locations.json")
+settings = JsonReader("settings.json")
 mount_points = dict([('media', """/media/media/Pictures/K/Dam/IMG_0142.JPG"""), ('home', """/media/media/Pictures/K/Home/IMG_8142.JPG""")])
 run_command = 'fbi'
+launch_args = ['-t', '25', '-a', '-u']
 	
 @app.route('/mounts')
 def mounts():
@@ -23,13 +25,14 @@ def mounts():
 	p = subprocess.Popen(['findmnt', '-o', 'SOURCE,SIZE,USE%,TARGET', '-t', 'nfs4,ext2,ext4'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	"""out,err = p.communicate()"""
 	out = p.stdout.readlines()
-	L = out[0]
+	L = out
 	return render_template(
 		'index.html',
 		title='Mount Points',
 		year=datetime.now().year,
 		mounts = L
 	)
+	
 	
 @app.route('/status')
 def status():
@@ -99,8 +102,9 @@ def startPost():
 	return startProcess(launchPath)
 	
 def startProcess(launchPath):
+	full_args = buildArgs(launchPath)
 	#raise
-	p = subprocess.Popen([run_command, launchPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	p = subprocess.Popen(full_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	time.sleep(1)
 	p.poll()
 	if p.returncode != None:
@@ -119,3 +123,15 @@ def startProcess(launchPath):
 			code = p.returncode,
 			year=datetime.now().minute
 			)
+
+def buildArgs(launchPath):
+	params = settings.read()
+	launchPath = launchPath + "*"
+	launch_args = []
+	launch_args.append(run_command)
+	launch_args.append('-t')
+	params["time"]
+	launch_args.append('a')
+	launch_args.append('-u')
+	launch_args.append(launchPath)
+	return launch_args
