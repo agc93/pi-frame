@@ -9,6 +9,7 @@ from flask import render_template, redirect, request, jsonify
 
 from pi_frame_web import app
 from os import *
+from os.path import isfile, join
 import subprocess
 import time
 from file_read import *
@@ -17,8 +18,7 @@ reader = JsonReader("locations.json")
 settings = JsonReader("settings.json")
 mount_points = dict([('media', """/media/media/Pictures/K/Dam/IMG_0142.JPG"""), ('home', """/media/media/Pictures/K/Home/IMG_8142.JPG""")])
 run_command = 'fbi'
-launch_args = ['-t', '25', '-a', '-u']
-	
+
 @app.route('/mounts')
 def mounts():
 	"""Renders the home page, with a list of all polls."""
@@ -102,8 +102,10 @@ def startPost():
 	return startProcess(launchPath)
 	
 def startProcess(launchPath):
-	full_args = buildArgs(launchPath)
-	print full_args
+	#full_args = buildArgs()
+	#raise
+	files = getFiles(launchPath)
+	full_args = buildArgs() + files
 	#raise
 	p = subprocess.Popen(full_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	time.sleep(1)
@@ -125,14 +127,18 @@ def startProcess(launchPath):
 			year=datetime.now().minute
 			)
 
-def buildArgs(launchPath):
+def buildArgs():
 	params = settings.read()
-	launchPath = launchPath + "*"
+	#launchPath = launchPath + "*"
 	launch_args = []
 	launch_args.append(run_command)
 	launch_args.append('-t')
-	params["time"]
+	launch_args.append(params["time"])
 	launch_args.append('-a')
 	launch_args.append('-u')
-	launch_args.append(launchPath)
+	#launch_args.append(launchPath)
 	return launch_args
+
+def getFiles(folderPath):
+	files = [ join(folderPath, f) for f in listdir(folderPath) if isfile(join(folderPath, f)) ]
+	return files
