@@ -145,7 +145,7 @@ def buildArgs():
 	launch_args.append(params["time"])
 	launch_args.append('-a')
 	launch_args.append('-u')
-	launch_args.append('-d')
+	launch_args.append(params["deviceArg"])
 	launch_args.append(params["device"])
 	#launch_args.append(launchPath)
 	return launch_args
