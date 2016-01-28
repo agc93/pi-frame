@@ -74,6 +74,7 @@ def status():
 			code = "?"
 			)
 
+@app.route('/')
 @app.route('/home')
 def launch():
 	return render_template(
@@ -81,7 +82,6 @@ def launch():
 		locations = reader.read()
 		)
 
-@app.route('/')
 @app.route('/input')
 def input():
 	return render_template('input.html')
