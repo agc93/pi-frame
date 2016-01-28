@@ -1,6 +1,7 @@
 {
+    "small": "/mnt/media/Pictures/Small", 
     "dam": "/mnt/media/Pictures/K/Dam/", 
     "mount": "/mnt/", 
-    "low": "/mnt/media/Pictures/Drunken Escapades/",
+    "low": "/mnt/media/Pictures/Drunken Escapades/", 
     "thinkpad": "/media/media/Pictures/K/Dam/"
 }
