@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}} - Flask Polls</title>
+    <title>{{title}} - Pi Frame</title>
     <link rel="stylesheet" type="text/css" href="/static/content/bootstrap.cyborg.min.css" />
     <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
     <script src="/static/scripts/modernizr-2.6.2.js"></script>
@@ -18,11 +18,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="/" class="navbar-brand">Flask Polls</a>
+                <a href="/" class="navbar-brand">Photo Slideshow</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="{{url_for('status')}}">Status</a></li>
+                    <li><a href="{{url_for('start')}}">Start</a></li>
+                    <li><a href="{{url_for('stop')}}">Stop</a></li>
                 </ul>
             </div>
         </div>
@@ -32,7 +34,7 @@
         {% block content %}{% endblock %}
         <hr />
         <footer>
-            <p>&copy; {{year}} - Flask Polls</p>
+            
         </footer>
     </div>
 
