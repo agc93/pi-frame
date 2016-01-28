@@ -86,7 +86,6 @@ def launch():
 def input():
 	return render_template('input.html')
 
-@app.route('/start')
 @app.route('/start/<folderPath>', methods = ['GET', 'POST'])
 def startGet(folderPath = ""):
 	#folderPath = request.args.get('folderPath')
@@ -103,6 +102,11 @@ def startPost():
 	locations = reader.read()
 	launchPath = locations[request.form['folderPath']]
 	return startProcess(launchPath)
+	
+@app.route('/stop', methods = ['GET'])
+def stopRunning():
+	killExisting()
+	return redirect(url_for('status'))
 	
 def startProcess(launchPath):
 	#full_args = buildArgs()
