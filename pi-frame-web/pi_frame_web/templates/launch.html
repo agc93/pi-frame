@@ -7,12 +7,12 @@
 	</div>
 	<div class="panel-body">
 		<p>
-			<form class="form-horizontal" action="{{ url_for('startGet') }}" method="post" enctype="multipart/form-data">
+			<form class="form-horizontal" action="{{ url_for('startGet') }}" method="post" >
 				<fieldset>
 					<div class="input-group">
 						<label for="path" class="col-lg-2 control-label">Path</label>
 						<div class="col-lg-10">
-							<select class="form-control" id="folderPath" name="folderPath">
+							<select class="form-control" name="folderPath">
 							  {% for location in locations %}
 							  <option value="{{ location }}">{{ location }}</option>
 							  {% endfor %}
