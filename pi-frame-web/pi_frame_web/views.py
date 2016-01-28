@@ -86,6 +86,7 @@ def launch():
 def input():
 	return render_template('input.html')
 
+@app.route('/start')
 @app.route('/start/<folderPath>', methods = ['GET', 'POST'])
 def startGet(folderPath = ""):
 	#folderPath = request.args.get('folderPath')
