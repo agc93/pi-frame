@@ -107,7 +107,7 @@ def startPost():
 @app.route('/stop', methods = ['GET'])
 def stopRunning():
 	killExisting()
-	return redirect(url_for('status'))
+	return redirect('status')
 	
 def startProcess(launchPath):
 	#full_args = buildArgs()
