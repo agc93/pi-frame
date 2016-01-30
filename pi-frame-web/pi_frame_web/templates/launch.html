@@ -9,7 +9,7 @@
 		<p>
 			<form class="form-horizontal" action="{{ url_for('startGet') }}" method="get" >
 				<fieldset>
-					<div class="input-group">
+					<div class="form-group">
 						<label for="path" class="col-lg-2 control-label">Path</label>
 						<div class="col-lg-10">
 							<select class="form-control" name="folderPath">
@@ -19,8 +19,10 @@
 							</select>
 						</div>
 					</div>
-					<div class="input-group">
+					<div class="form-group">
+						<div class="col-lg-10 col-lg-offset-2">
 						<input type="submit" class="btn btn-primary" value="Launch">
+						</div>
 					</div>
 				</fieldset>
 			</form>

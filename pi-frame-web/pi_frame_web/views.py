@@ -14,6 +14,7 @@ import subprocess
 import time
 from file_read import *
 from process_details import *
+from location_details import *
 import os
 import signal
 
@@ -82,9 +83,23 @@ def launch():
 		locations = reader.read()
 		)
 
-@app.route('/input')
+@app.route('/create')
 def input():
 	return render_template('input.html')
+
+@app.route('/list')
+def listAlbums():
+	locations = reader.read()
+	locationDetails = []
+	for location in locations:
+		files = getFiles(locations[location])
+		album = LocationDetails(location, locations[location], len(files))
+		locationDetails.append(album)
+	#raise
+	return render_template(
+		'albums.html',
+		albums = locationDetails
+		)
 
 @app.route('/start', methods = ['GET', 'POST'])
 @app.route('/start/<folderPath>', methods = ['GET', 'POST'])
@@ -113,7 +128,8 @@ def startProcess(launchPath):
 	#full_args = buildArgs()
 	#raise
 	killExisting()
-	files = getFiles(launchPath)
+	dirFiles = getFiles(launchPath)
+	files = dirFiles + dirFiles
 	full_args = buildArgs() + files
 	#raise
 	p = subprocess.Popen(full_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -152,8 +168,7 @@ def buildArgs():
 
 def getFiles(folderPath):
 	files = [ join(folderPath, f) for f in listdir(folderPath) if isfile(join(folderPath, f)) ]
-	allfiles = files + files
-	return allfiles
+	return files
 	
 def killExisting():
 	p = ProcessDetails(run_command)
