@@ -152,7 +152,8 @@ def buildArgs():
 
 def getFiles(folderPath):
 	files = [ join(folderPath, f) for f in listdir(folderPath) if isfile(join(folderPath, f)) ]
-	return files += files
+	allfiles = files + files
+	return allfiles
 	
 def killExisting():
 	p = ProcessDetails(run_command)
