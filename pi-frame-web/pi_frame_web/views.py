@@ -92,7 +92,10 @@ def listAlbums():
 	locations = reader.read()
 	locationDetails = []
 	for location in locations:
-		files = getFiles(locations[location])
+		try:
+			files = getFiles(locations[location])
+		except:
+			files = []
 		album = LocationDetails(location, locations[location], len(files))
 		locationDetails.append(album)
 	#raise
@@ -128,7 +131,14 @@ def startProcess(launchPath):
 	#full_args = buildArgs()
 	#raise
 	killExisting()
-	dirFiles = getFiles(launchPath)
+	try:
+		dirFiles = getFiles(launchPath)
+	except:
+		return render_template(
+			'error.html',
+			message = "Could not open directory " + launchPath,
+			path = launchPath
+			)
 	files = dirFiles + dirFiles
 	full_args = buildArgs() + files
 	#raise

@@ -8,6 +8,7 @@
 			<th>Name</th>
 			<th>Location</th>
 			<th>Files</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -16,10 +17,32 @@
 			<td>{{ album.Name }}</td>
 			<td>{{ album.Path }}</td>
 			<td>{{ album.Count }}</td>
+			<td><a class="btn btn-sm btn-danger btn-delete"  data-target="{{ album.Name }}" href="#">Delete</a></td>
 		</tr>
 		{% endfor %}
 	</tbody>
 </table>
 
 <a class="btn btn-lg btn-primary" href="{{ url_for('input') }}">Create New</a>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" >
+	function deleteAlbum(locName) {
+		$.ajax({
+			type: "DELETE",
+			url: "{{ url_for('deleteLocation') }}",
+			data: {"name": locName },
+			success: function(msg){
+				location.reload(true)
+			}
+		});
+	}
+	
+	$(document).ready(function() {
+		$('.btn-delete').click(function() {
+			deleteAlbum($(this).attr('data-target'));
+		});
+	});
+</script>
 {% endblock %}
