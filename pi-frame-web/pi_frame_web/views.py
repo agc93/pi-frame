@@ -127,8 +127,6 @@ def stopRunning():
 	killExisting()
 	return redirect('status')
 	
-	@
-	
 def startProcess(launchPath):
 	#full_args = buildArgs()
 	#raise
