@@ -13,7 +13,6 @@ import sys
 
 if __name__ == '__main__':
     HOST = environ.get('SERVER_HOST', '0.0.0.0')
-    print HOST
     try:
         PORT = int(environ.get('SERVER_PORT', '5555'))
     except ValueError:

@@ -1,0 +1,5 @@
+{
+    "python.linting.pylintEnabled": false,
+    "python.linting.pylintPath": "C:/Python27/Scripts/pylint.exe",
+    "editor.insertSpaces": false
+}

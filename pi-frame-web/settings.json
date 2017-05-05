@@ -1,5 +1,5 @@
 {
 	"time": "15",
-	"deviceArg": "-vt",
-	"device": "1"
+	"deviceArg": "-d",
+	"device": "/dev/fb"
 }
