@@ -5,22 +5,24 @@ class ProcessDetails(object):
     """Container for process details
     """
 
-    def __init__(self, processName):
-        self.ProcessName = processName
-    def GetPIDs(self):
+    def __init__(self, process_name):
+        self.ProcessName = process_name
+
+    def get_PIDs(self):
         p = subprocess.Popen(['pidof', self.ProcessName], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out,err = p.communicate()
-        #raise
+        out, err = p.communicate()
+        # raise
         if out != None and out != "":
             out = out.rstrip('\n')
             l = out.split(' ')
             return l
         else:
             return None
-    def GetProcess(self):
+
+    def get_process(self):
         p = subprocess.Popen(['pidof', self.ProcessName], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out,err = p.communicate()
-        if out != None and out != "":
+        out, err = p.communicate()
+        if out is not None and out != "":
             out = out.rstrip('\n')
             l = out.strip(' ')
             return l
@@ -29,6 +31,8 @@ class ProcessDetails(object):
             if len(detail) != 1:
                 status = detail[1].rsplit()
                 return ProcessInfo(l, status[1], status[2], status[3])
+
+
 class ProcessInfo(object):
     def __init__(self, pid, console, time, process):
         self.PID = pid

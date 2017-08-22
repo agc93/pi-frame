@@ -56,7 +56,7 @@
 	function deleteAlbum(locName) {
 		$.ajax({
 			type: "DELETE",
-			url: "{{ url_for('deleteLocation') }}",
+			url: "{{ url_for('delete_location') }}",
 			data: {
 				"name": locName
 			},

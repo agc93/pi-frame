@@ -20,172 +20,178 @@ import signal
 
 reader = JsonReader("locations.json")
 settings = JsonReader("settings.json")
-mount_points = dict([('media', """/media/media/Pictures/K/Dam/IMG_0142.JPG"""), ('home', """/media/media/Pictures/K/Home/IMG_8142.JPG""")])
+mount_points = dict([('media', """/media/media/Pictures/K/Dam/IMG_0142.JPG"""),
+                     ('home', """/media/media/Pictures/K/Home/IMG_8142.JPG""")])
 run_command = 'fbi'
+
 
 @app.route('/mounts')
 def mounts():
-	"""Renders the home page, with a list of all polls."""
-	p = subprocess.Popen(['findmnt', '-o', 'SOURCE,SIZE,USE%,TARGET', '-t', 'nfs4,ext2,ext4'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	"""out,err = p.communicate()"""
-	out = p.stdout.readlines()
-	L = out
-	return render_template(
-		'index.html',
-		title='Mount Points',
-		year=datetime.now().year,
-		mounts = L
-	)
-	
-	
+    """Renders the home page, with a list of all polls."""
+    p = subprocess.Popen(['findmnt', '-o', 'SOURCE,SIZE,USE%,TARGET', '-t', 'nfs4,ext2,ext4'], stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+    """out,err = p.communicate()"""
+    out = p.stdout.readlines()
+    L = out
+    return render_template(
+        'index.html',
+        title='Mount Points',
+        year=datetime.now().year,
+        mounts=L
+    )
+
+
 @app.route('/status')
 def status():
-	# Attempts to get status of slideshow
-	p = subprocess.Popen(['pidof', run_command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	out,err = p.communicate()
-	if out != None and out != "":
-		out = out.rstrip('\n')
-		s = subprocess.Popen(['ps', '-p', out], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		detail = s.stdout.readlines()
-		if len(detail) == 1:
-			return render_template(
-				'error.html',
-				message = "Process state unknown",
-				output = "The process appears to be running, but we cannot get any further details",
-				error = "pidof returned " + out + " but ps failed to find the process",
-				path = "unknown",
-				code = "?"
-				)
-		else:
-			status = detail[1].rsplit()
-			return render_template(
-				'status.html',
-				pid = out,
-				console = status[1],
-				time = status[2],
-				process = status[3]
-				)
-	else:
-		return render_template(
-			'error.html',
-			message = 'Process not running!',
-			output = 'It appears the process is not running :( Try launching it again from the home page',
-			error = 'pidof did not return a valid ID',
-			path = "unknown",
-			code = "?"
-			)
+    # Attempts to get status of slideshow
+    p = subprocess.Popen(['pidof', run_command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = p.communicate()
+    if out is not None and out != "":
+        out = out.rstrip('\n')
+        s = subprocess.Popen(['ps', '-p', out], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        detail = s.stdout.readlines()
+        if len(detail) == 1:
+            return render_template(
+                'error.html',
+                message="Process state unknown",
+                output="The process appears to be running, but we cannot get any further details",
+                error="pidof returned " + out + " but ps failed to find the process",
+                path="unknown",
+                code="?"
+            )
+        else:
+            status = detail[1].rsplit()
+            return render_template(
+                'status.html',
+                pid=out,
+                console=status[1],
+                time=status[2],
+                process=status[3]
+            )
+    else:
+        return render_template(
+            'error.html',
+            message='Process not running!',
+            output='It appears the process is not running :( Try launching it again from the home page',
+            error='pidof did not return a valid ID',
+            path="unknown",
+            code="?"
+        )
+
 
 @app.route('/')
 @app.route('/home')
 def launch():
-	return render_template(
-		'launch.html',
-		locations = reader.read()
-		)
+    return render_template(
+        'launch.html',
+        locations=reader.read()
+    )
+
 
 @app.route('/create')
 def input():
-	return render_template('input.html')
+    return render_template('input.html')
+
 
 @app.route('/list')
-def listAlbums():
-	locations = reader.read()
-	locationDetails = []
-	for location in locations:
-		try:
-			files = getFiles(locations[location])
-		except:
-			files = []
-		album = LocationDetails(location, locations[location], len(files))
-		locationDetails.append(album)
-	#raise
-	return render_template(
-		'albums.html',
-		albums = locationDetails
-		)
+def list_albums():
+    locations = reader.read()
+    location_details = []
+    for location in locations:
+        try:
+            files = get_files(locations[location])
+        except:
+            files = []
+        album = LocationDetails(location, locations[location], len(files))
+        location_details.append(album)
+    # raise
+    return render_template(
+        'albums.html',
+        albums=location_details
+    )
 
-@app.route('/start', methods = ['GET', 'POST'])
-@app.route('/start/<folderPath>', methods = ['GET', 'POST'])
-def startGet(folderPath = ""):
-	#folderPath = request.args.get('folderPath')
-	
-	if folderPath == "":
-		#folderPath = request.form['folderPath']
-		folderPath = request.args.get('folderPath')
-	locations = reader.read()
-	launchPath=locations[folderPath]
-	return startProcess(launchPath)
-	
-@app.route('/post', methods = ['POST'])
-def startPost():
-	locations = reader.read()
-	launchPath = locations[request.form['folderPath']]
-	return startProcess(launchPath)
-	
-@app.route('/stop', methods = ['GET'])
-def stopRunning():
-	killExisting()
-	return redirect('status')
-	
-def startProcess(launchPath):
-	#full_args = buildArgs()
-	#raise
-	killExisting()
-	try:
-		dirFiles = getFiles(launchPath)
-	except:
-		return render_template(
-			'error.html',
-			message = "Could not open directory " + launchPath,
-			path = launchPath
-			)
-	files = dirFiles + dirFiles
-	full_args = buildArgs() + files
-	#raise
-	p = subprocess.Popen(full_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	time.sleep(1)
-	p.poll()
-	if p.returncode != None:
-		out,err = p.communicate()
-		return render_template(
-			'error.html',
-			message = "Error launching process",
-			path = launchPath,
-			code = p.returncode,
-			output = out,
-			error = err)
-	else:
-		return render_template(
-			'confirm.html',
-			path=launchPath,
-			code = p.returncode,
-			year=datetime.now().minute
-			)
 
-def buildArgs():
-	params = settings.read()
-	launch_args = []
-	launch_args.append(run_command)
-	launch_args.append('-t')
-	launch_args.append(params["time"])
-	launch_args.append('-a')
-	launch_args.append('-u')
-	launch_args.append(params["deviceArg"])
-	launch_args.append(params["device"])
-	return launch_args
+@app.route('/start', methods=['GET', 'POST'])
+@app.route('/start/<folder_path>', methods=['GET', 'POST'])
+def start_get(folder_path=""):
+    # folder_path = request.args.get('folder_path')
 
-def getFiles(folderPath):
-	files = [ join(folderPath, f) for f in listdir(folderPath) if isfile(join(folderPath, f)) ]
-	return files
-	
-def killExisting():
-	p = ProcessDetails(run_command)
-	pids = p.GetPIDs()
-	if pids == None:
-		return
-	else:
-		for pid in pids:
-			try:
-				os.kill(int(pid), signal.SIGTERM)
-			except ValueError:
-				break
+    if folder_path == "":
+        # folder_path = request.form['folder_path']
+        folder_path = request.args.get('folder_path')
+    locations = reader.read()
+    launch_path = locations[folder_path]
+    return start_process(launch_path)
+
+
+@app.route('/post', methods=['POST'])
+def start_post():
+    locations = reader.read()
+    launch_path = locations[request.form['folderPath']]
+    return start_process(launch_path)
+
+
+@app.route('/stop', methods=['GET'])
+def stop_running():
+    kill_existing()
+    return redirect('status')
+
+
+def start_process(launch_path):
+    # full_args = build_args()
+    # raise
+    kill_existing()
+    try:
+        dir_files = get_files(launch_path)
+    except:
+        return render_template(
+            'error.html',
+            message="Could not open directory " + launch_path,
+            path=launch_path
+        )
+    files = dir_files + dir_files
+    full_args = build_args() + files
+    # raise
+    p = subprocess.Popen(full_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    time.sleep(1)
+    p.poll()
+    if p.returncode is not None:
+        out, err = p.communicate()
+        return render_template(
+            'error.html',
+            message="Error launching process",
+            path=launch_path,
+            code=p.returncode,
+            output=out,
+            error=err)
+    else:
+        return render_template(
+            'confirm.html',
+            path=launch_path,
+            code=p.returncode,
+            year=datetime.now().minute
+        )
+
+
+def build_args():
+    params = settings.read()
+    launch_args = [run_command, '-t', params["time"], '-a', '-u', params["deviceArg"], params["device"]]
+    return launch_args
+
+
+def get_files(folder_path):
+    files = [join(folder_path, f) for f in listdir(folder_path) if isfile(join(folder_path, f))]
+    return files
+
+
+def kill_existing():
+    p = ProcessDetails(run_command)
+    pids = p.get_PIDs()
+    if pids is None:
+        return
+    else:
+        for pid in pids:
+            try:
+                os.kill(int(pid), signal.SIGTERM)
+            except ValueError:
+                break

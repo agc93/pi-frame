@@ -12,13 +12,13 @@
                     <div class="form-group">
                         <label for="name" class="col-lg-2 control-label">Album Name</label>
                         <div class="col-lg-10">
-                            <input class="form-control" type="text" name="name" id="name" placeholder="Trip Photos" required />
+                            <input class="form-control" name="name" id="name" placeholder="Trip Photos" required />
                         </div>
 					</div>
 					<div class="form-group">
 						<label for="location" class="col-lg-2 control-label">Path</label>
                         <div class="col-lg-10">
-                            <input class="form-control" type="text" name="location" id="location" placeholder="/media/Multimedia/Photos/" required />
+                            <input class="form-control" name="location" id="location" placeholder="/media/Multimedia/Photos/" required />
                         </div>
 					</div>
                     <div class="form-group">
@@ -40,9 +40,10 @@
 		form.append("location", $('#location').val());
 		$.ajax({
 			type: "POST",
-			url: "{{ url_for('addLocation') }}",
+			url: "{{ url_for('add_location') }}",
 			data: $('#albumInput').serialize(),
 			success: function(msg){
+			    console.log(msg);
 				window.location.href = "/list";
 			}
 		});
