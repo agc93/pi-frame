@@ -12,9 +12,9 @@ from os import *
 from os.path import isfile, join
 import subprocess
 import time
-from file_read import *
-from process_details import *
-from location_details import *
+from pi_frame_web.file_read import *
+from pi_frame_web.process_details import *
+from pi_frame_web.location_details import *
 import os
 import signal
 
@@ -164,7 +164,6 @@ def startProcess(launchPath):
 
 def buildArgs():
 	params = settings.read()
-	#launchPath = launchPath + "*"
 	launch_args = []
 	launch_args.append(run_command)
 	launch_args.append('-t')
@@ -173,7 +172,6 @@ def buildArgs():
 	launch_args.append('-u')
 	launch_args.append(params["deviceArg"])
 	launch_args.append(params["device"])
-	#launch_args.append(launchPath)
 	return launch_args
 
 def getFiles(folderPath):

@@ -1,0 +1,11 @@
+
+version: '2'
+
+services:
+  pi-frame:
+    image: pi-frame:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5555:5555

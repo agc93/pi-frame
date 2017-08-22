@@ -1,8 +1,8 @@
 from flask import render_template, redirect, request, jsonify
 
-from pi_frame_web import app
+from pi_frame_web import *
 from os import *
-from file_read import *
+from pi_frame_web.file_read import *
 
 reader = JsonReader("locations.json")
 
