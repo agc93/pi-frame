@@ -1,7 +1,0 @@
-PY2
-suite
-sys
-reload_module
-FlaskTestCase
-ExtImportHookTestCase
-unittest

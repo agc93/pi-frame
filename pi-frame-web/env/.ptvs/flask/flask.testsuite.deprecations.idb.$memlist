@@ -1,6 +1,0 @@
-catch_warnings
-unittest
-flask
-DeprecationsTestCase
-suite
-FlaskTestCase
