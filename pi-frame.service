@@ -1,0 +1,15 @@
+[Unit]
+Description=Pi Frame
+After=multi-user.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/opt/pi-frame/
+ExecStart=/usr/bin/python3 /opt/pi-frame/runserver.py
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
