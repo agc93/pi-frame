@@ -1,0 +1,17 @@
+[Unit]
+Description=Pi Frame
+After=syslog.target network.target sshd.service
+
+[Service]
+Type=simple
+User=root
+Group=pi
+Environment=SERVER_PORT=80
+#Environment=APP_DEBUG=True
+WorkingDirectory=/opt/pi-frame/
+ExecStart=/usr/bin/python3 -u /opt/pi-frame/runserver.py
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target

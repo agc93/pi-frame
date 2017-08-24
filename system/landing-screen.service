@@ -1,0 +1,17 @@
+[Unit]
+Description=Landing Screen Image
+After=syslog.target network.target pi-frame.service multi-user.target
+
+[Service]
+Type=forking
+User=root
+Group=pi
+WorkingDirectory=/opt/
+ExecStartPre=/usr/bin/wget -O /opt/landing.jpg https://source.unsplash.com/1920x1080/?mountains
+ExecStart=/usr/bin/fbi -T 1 -a -d /dev/fb0 /opt/landing.jpg
+ExecStop=/usr/bin/killall fbi
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
