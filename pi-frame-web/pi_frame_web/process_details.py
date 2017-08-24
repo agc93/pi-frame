@@ -9,8 +9,10 @@ class ProcessDetails(object):
         self.ProcessName = process_name
 
     def get_PIDs(self):
-        p = subprocess.Popen(['pidof', self.ProcessName], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = p.communicate()
+        try:
+            out = subprocess.check_output(['pidof', self.ProcessName], stderr=subprocess.PIPE, universal_newlines=True)
+        except subprocess.CalledProcessError as err:
+            out = err.output
         # raise
         if out != None and out != "":
             out = out.rstrip('\n')
@@ -20,14 +22,19 @@ class ProcessDetails(object):
             return None
 
     def get_process(self):
-        p = subprocess.Popen(['pidof', self.ProcessName], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = p.communicate()
+        try:
+            out = subprocess.check_output(['pidof', self.ProcessName], stderr=subprocess.PIPE, universal_newlines=True)
+        except subprocess.CalledProcessError as err:
+            out = err.output
         if out is not None and out != "":
             out = out.rstrip('\n')
             l = out.strip(' ')
-            return l
-            s = subprocess.Popen(['ps', '-p', out], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            detail = s.stdout.readlines()
+            #return l
+            try:
+                s = subprocess.check_output(['ps', '-p', out], stderr=subprocess.PIPE, universal_newlines=True)
+            except subprocess.CalledProcessError as err:
+                s = err.output
+            detail = s.split('\n')
             if len(detail) != 1:
                 status = detail[1].rsplit()
                 return ProcessInfo(l, status[1], status[2], status[3])

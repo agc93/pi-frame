@@ -26,7 +26,7 @@
 	</div>
 	<div class="panel-body">
 		<p>
-			<form id="albumInput" class="form-horizontal" action="/">
+			<form id="albumInput" class="form-horizontal">
 				<fieldset>
 					<div class="form-group">
 						<label for="name" class="col-lg-2 control-label">Album Name</label>
@@ -42,7 +42,7 @@
 					</div>
 					<div class="form-group">
 						<div class="col-lg-10 col-lg-offset-2">
-							<button class="btn btn-primary">Create</button>
+							<button class="btn btn-primary btn-create">Create</button>
 						</div>
 					</div>
 				</fieldset>
@@ -50,7 +50,6 @@
 		</p>
 	</div>
 </div>
-<!-- <a class="btn btn-lg btn-primary" href="{{ url_for('input') }}">Create New</a> --> 
 {% endblock %} {% block scripts %}
 <script type="text/javascript">
 	function deleteAlbum(locName) {
@@ -61,13 +60,31 @@
 				"name": locName
 			},
 			success: function (msg) {
-				location.reload(true)
+				window.location.reload(true)
 			}
 		});
 	}
+	function addAlbum(locName, location) {
+	    $.ajax({
+            type: "POST",
+            url: "{{  url_for('add_location') }}",
+            data: {
+                "name": locName,
+                "location": location
+            },
+            success: function(msg) {
+                window.location.reload(true)
+            }
+        });
+    }
 
 	$(document).ready(function () {
+	    $('.btn-create').click(function() {
+            $('.btn-create').spin();
+            addAlbum($('#name').val(),$('#location').val());
+        });
 		$('.btn-delete').click(function () {
+		    $(this).spin();
 			deleteAlbum($(this).attr('data-target'));
 		});
 	});

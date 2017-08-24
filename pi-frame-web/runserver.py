@@ -18,7 +18,7 @@ if __name__ == '__main__':
     except ValueError:
         PORT = 5555
     debugMode = environ.get('APP_DEBUG', False)
-    if __debug__:
+    if __debug__ and debugMode:
         app.debug = True
         app.config['SECRET_KEY'] = '0123456789'
         toolbar = DebugToolbarExtension(app)

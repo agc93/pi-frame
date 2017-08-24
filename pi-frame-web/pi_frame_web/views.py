@@ -44,12 +44,15 @@ def mounts():
 @app.route('/status')
 def status():
     # Attempts to get status of slideshow
-    p = subprocess.Popen(['pidof', run_command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = p.communicate()
-    if out is not None and out != "":
-        out = out.rstrip('\n')
-        s = subprocess.Popen(['ps', '-p', out], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        detail = s.stdout.readlines()
+    out = ProcessDetails(run_command).get_PIDs()
+    # out = subprocess.check_output(['pidof', run_command], stderr=subprocess.PIPE, universal_newlines=True)
+    if out is not None and len(out) != 0:
+        out = out[0]
+        try:
+            s = subprocess.check_output(['ps', '-p', out], stderr=subprocess.PIPE, universal_newlines=True)
+        except subprocess.CalledProcessError as err:
+            s = err.output
+        detail = s.split('\n')
         if len(detail) == 1:
             return render_template(
                 'error.html',
@@ -87,12 +90,6 @@ def launch():
         locations=reader.read()
     )
 
-
-@app.route('/create')
-def input():
-    return render_template('input.html')
-
-
 @app.route('/list')
 def list_albums():
     locations = reader.read()
@@ -124,11 +121,17 @@ def start_get(folder_path=""):
     return start_process(launch_path)
 
 
-@app.route('/post', methods=['POST'])
-def start_post():
+@app.route('/add', methods=['POST'])
+@app.route('/add/<name>', methods=['POST'])
+def add_album(name="", location=""):
+    if location == "":
+        location = request.args.get('location')
+    if name == "":
+        name = request.args.get('name')
     locations = reader.read()
-    launch_path = locations[request.form['folderPath']]
-    return start_process(launch_path)
+    locations[name] = location
+    reader.write(locations)
+    return redirect('list')
 
 
 @app.route('/stop', methods=['GET'])
@@ -151,11 +154,12 @@ def start_process(launch_path):
         )
     files = dir_files + dir_files
     full_args = build_args() + files
-    # raise
-    p = subprocess.Popen(full_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #raise ValueError('Testing arg parsing')
+    p = subprocess.Popen(full_args, executable=run_command ,stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
     time.sleep(1)
     p.poll()
-    if p.returncode is not None:
+    if (p.returncode is not None) and (p.returncode != 0):
+        print('Return Code: ' + p.returncode)
         out, err = p.communicate()
         return render_template(
             'error.html',
@@ -175,7 +179,10 @@ def start_process(launch_path):
 
 def build_args():
     params = settings.read()
-    launch_args = [run_command, '-t', params["time"], '-a', '-u', params["deviceArg"], params["device"]]
+    enable_cache = params.get('enableCache', False)
+    console = params.get('console', '1')
+    launch_args = ['-readahead' if enable_cache else '-noreadahead', '-t', params["time"], '-a', '-T', console, '-u', '-d', params["device"]]
+    print(launch_args)
     return launch_args
 
 
